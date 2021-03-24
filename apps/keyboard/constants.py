@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from typing import Tuple
+from typing import List, Tuple
 
 from django.utils.translation import ugettext_lazy as _
 
@@ -34,3 +34,11 @@ class DataType:
             (DataType.ALL_1MICRO_NEAR12, _("1号麦克风-近间隔12个键位")),
             (DataType.ALL_0MICRO_NEAR12, _("0号麦克风-近间隔12个键位")),
         )
+
+
+class FileType:
+    PICKLE = "pickle"
+
+    @staticmethod
+    def get_names() -> List:
+        return [FileType.PICKLE]
