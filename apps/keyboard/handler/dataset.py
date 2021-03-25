@@ -7,8 +7,9 @@ import uuid
 from django.conf import settings
 
 from apps.keyboard.core import load
+from djangocli.constants import LogModule
 
-logger = logging.getLogger("apps")
+logger = logging.getLogger(LogModule.APPS)
 
 
 class DatasetHandler:
