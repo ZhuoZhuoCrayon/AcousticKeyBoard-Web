@@ -16,3 +16,5 @@ __pycache__/
 env/dc_*.env
 
 in_python/
+
+logs/

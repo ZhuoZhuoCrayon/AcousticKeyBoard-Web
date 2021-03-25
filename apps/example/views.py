@@ -1,3 +1,5 @@
+import logging
+
 from django.utils.translation import ugettext_lazy as _
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
@@ -5,9 +7,12 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from apps.example import exceptions, handler, models, serializers
+from djangocli.constants import LogModule
 from djangocli.utils.drf import view
 
 # Create your views here.
+
+logger = logging.getLogger(LogModule.APPS)
 
 
 class ExampleBookViews(view.DjangoCliModelViewSet):
@@ -54,6 +59,7 @@ class ExampleCommonViews(view.DjangoCliGenericViewSet):
     )
     @action(methods=["POST"], detail=False, serializer_class=serializers.CommonExceptionRequestSer)
     def expected_exception(self, request, *args, **kwargs):
+        logger.warning(_("用户 -> {user} 即将主动抛出了一个异常").format(user=request.user))
         raise exceptions.CommonExceptionException(context={"user": request.user})
 
     @swagger_auto_schema(

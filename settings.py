@@ -5,6 +5,8 @@ from pathlib import Path
 
 import dotenv
 
+from scripts.check_and_create_log_file import check_and_create_log_file
+
 
 class EnvType:
     DEV = "dev"
@@ -34,3 +36,7 @@ for _setting in dir(_module):
 
 # 需要覆盖全局的变量
 BASE_DIR = Path(__file__).resolve().parent
+
+
+# check and create log file
+check_and_create_log_file(log_file_paths=list(_module.LOGGING_FILE.values()))

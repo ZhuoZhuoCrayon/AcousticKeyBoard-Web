@@ -59,25 +59,24 @@ API_COMMON_VALIDATE_EXCEPTION = ApiMockData(
     },
 )
 
-
 API_COMMON_CELERY_DELAY = ApiMockData(
     request_data={"left_val": 1, "right_val": 2, "operate": constants.MathOp.ADD},
     response_data={"task_id": "377ef8e1-395b-4a94-9ee5-d084e4b20567"},
 )
 
 API_BATCH_CELERY_RESULTS_DELAY = ApiMockData(
-    request_data={"task_ids": ["bafa6f6a-2fba-4fad-9d34-7dc167e8768c", "470a9e20-2abe-413a-89e7-3f18e9351f28"]},
+    request_data={"task_ids": ["55022997-19cf-4314-88c1-f1dfff282649", "7258bbf7-853f-4a2b-adb6-222ae23cd4af"]},
     response_data=[
         {
-            "date_done": "2021-03-20T15:51:35.011043",
-            "task_id": "470a9e20-2abe-413a-89e7-3f18e9351f28",
-            "result": 10000000,
+            "date_done": "2021-03-25T03:57:30.471903",
+            "task_id": "55022997-19cf-4314-88c1-f1dfff282649",
+            "result": 3,
             "status": "SUCCESS",
             "state": "SUCCESS",
         },
         {
-            "date_done": "2021-03-20T15:46:03.580606",
-            "task_id": "bafa6f6a-2fba-4fad-9d34-7dc167e8768c",
+            "date_done": "2021-03-25T03:57:13.090748",
+            "task_id": "7258bbf7-853f-4a2b-adb6-222ae23cd4af",
             "result": 3,
             "status": "SUCCESS",
             "state": "SUCCESS",
