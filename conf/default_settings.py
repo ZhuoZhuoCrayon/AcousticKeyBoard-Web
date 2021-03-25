@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import platform
 
 from djangocli.conf.djangocli_settings import *  # noqa
 
@@ -24,3 +25,8 @@ INSTALLED_APPS.extend(
         "apps.keyboard"
     ]
 )
+
+AK_ROOT = os.getenv("AK_ROOT", BASE_DIR)
+
+# 文件临时存储目录
+TMP_ROOT = os.getenv("TMP_ROOT", "c:/" if platform.system() == "Windows" else "/tmp")

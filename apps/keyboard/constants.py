@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
+import os
 from typing import List, Tuple
 
+from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 
 
@@ -42,3 +44,10 @@ class FileType:
     @staticmethod
     def get_names() -> List:
         return [FileType.PICKLE]
+
+
+DATA_ROOT = os.path.join(settings.AK_ROOT, "data")
+
+PREPROCESSED_DATA_ROOT = os.path.join(settings.AK_ROOT, "preprocessed_data")
+
+RESULT_ROOT = os.path.join(PREPROCESSED_DATA_ROOT, "result")

@@ -6,6 +6,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from apps.keyboard import models
+from apps.keyboard.handler import dataset as handler
 from apps.keyboard.serializers import dataset as serializers
 from djangocli.utils.drf import view
 
@@ -25,4 +26,10 @@ class DatasetViews(view.DjangoCliModelViewSet):
     )
     @action(methods=["POST"], detail=False, serializer_class=serializers.ImportDatasetRequestSer)
     def import_dataset(self, request, *args, **kwargs):
-        return Response({"verbose_name": self.query_data["verbose_name"]})
+        ser = serializers.ImportDatasetRequestSer(data=request.data)
+        ser.is_valid(raise_exception=True)
+        data = ser.validated_data
+        handler.DatasetHandler.import_dataset(
+            dataset_file=data["dataset"], verbose_name=data["verbose_name"], description_more=data["description_more"]
+        )
+        return Response({"verbose_name": data["verbose_name"]})
