@@ -2,7 +2,6 @@
 import datetime
 import logging
 import os
-import pickle
 import random
 from typing import Dict, Tuple
 
@@ -123,10 +122,3 @@ class DataSetUnit(DataSetUnitBase):
         plt.figure()
         plt.plot(data)
         plt.show()
-
-
-def load_dataset_unit(save_path: str) -> DataSetUnit:
-    with open(file=save_path, mode="rb") as ds_unit_reader:
-        dataset_unit = pickle.load(ds_unit_reader)
-        logger.info(f"read dataset_unit: {dataset_unit}")
-    return dataset_unit
