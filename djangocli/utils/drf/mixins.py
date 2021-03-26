@@ -21,9 +21,10 @@ class ViewSetExceptionHandlerMixin:
 
     def initialize_request(self, request, *args, **kwargs):
         # 打印请求日志
-        dc_api_logger = logging.getLogger(LogModule.API)
-        request_info = {"headers": dict(request.headers), "body": json.loads(request.body)}
-        dc_api_logger.info(
+        # 默认content_type == multipart/form-data时传递文件，不打印相关body信息
+        body = json.dumps({"type": "file"}) if request.content_type in ["multipart/form-data"] else request.body
+        request_info = {"headers": dict(request.headers), "body": json.loads(body)}
+        logging.getLogger(LogModule.API).info(
             f"{settings.APP_NAME} receive request: "
             f"api -> {request.path}, request_info -> \n {json.dumps(request_info, indent=2, ensure_ascii=False)}"
         )
@@ -99,8 +100,7 @@ class ViewSetResponseMixin:
             response_data = {"error": "not Response and  JsonResponse!"}
 
         # 打印接口返回日志
-        dc_api_logger = logging.getLogger(LogModule.API)
-        dc_api_logger.info(
+        logging.getLogger(LogModule.API).info(
             f"{settings.APP_NAME} response: api -> {request.path}, actual_status_code -> {actual_status_code}, "
             f"data -> \n{json.dumps(response_data, indent=2, ensure_ascii=False)}"
         )
