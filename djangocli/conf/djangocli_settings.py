@@ -75,6 +75,7 @@ LOGGING_FILE_ROOT = os.path.join(BASE_DIR, "logs")
 LOGGING_FILE = {
     "apps_log_file": os.path.join(LOGGING_FILE_ROOT, "apps.log"),
     "dc_log_file": os.path.join(LOGGING_FILE_ROOT, "dc.log"),
+    "api_log_file": os.path.join(LOGGING_FILE_ROOT, "api.log"),
     "django_request_log_file": os.path.join(LOGGING_FILE_ROOT, "django_request.log"),
     "django_server_log_file": os.path.join(LOGGING_FILE_ROOT, "django_server.log"),
 }
@@ -86,12 +87,12 @@ LOGGING = {
         "simple": {"format": "%(levelname)s [%(asctime)s] %(name)s | %(funcName)s | %(lineno)d %(message)s"},
         "verbose": {
             "format": "%(levelname)s [%(asctime)s] %(name)s | %(funcName)s | %(lineno)d | %(pathname)s"
-            "\n\t %(message)s",
+            "\n %(message)s",
             "datefmt": "%Y-%m-%d %H:%M:%S",
         },
         "django_api": {
             "format": "%(levelname)s [%(asctime)s] %(name)s | %(funcName)s | %(lineno)d | %(pathname)s "
-            " \n\t %(message)s status_code:%(status_code)d",
+            " \n %(message)s status_code:%(status_code)d",
             "datefmt": "%Y-%m-%d %H:%M:%S",
         },
     },
@@ -121,6 +122,12 @@ LOGGING = {
             "filename": LOGGING_FILE["dc_log_file"],
             "formatter": "verbose",
         },
+        "api_log_file": {
+            "level": "INFO",
+            "class": "logging.FileHandler",
+            "filename": LOGGING_FILE["api_log_file"],
+            "formatter": "verbose",
+        },
     },
     "loggers": {
         LogModule.DJANGO: {
@@ -139,5 +146,6 @@ LOGGING = {
         },
         LogModule.DJANGO_CLI: {"handlers": ["console", "dc_log_file"], "level": "INFO"},
         LogModule.APPS: {"handlers": ["console", "apps_log_file"], "level": "INFO"},
+        LogModule.API: {"handlers": ["api_log_file"], "level": "INFO"},
     },
 }

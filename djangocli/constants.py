@@ -10,6 +10,7 @@ class TimeUnit:
 
 class LogModule:
     DJANGO_CLI = "dc"
+    API = "api"
     APPS = "apps"
     DJANGO = "django"
     DJANGO_REQUEST = "django.request"
