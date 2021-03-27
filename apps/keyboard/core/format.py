@@ -20,7 +20,7 @@ def batch_gen_mfcc_feature(data: Dict[str, np.ndarray], fs: int) -> Dict[str, Li
     :param fs:
     :return:
     """
-    feature_data_items = concurrent.batch_call_multi_proc(
+    feature_data_items = concurrent.batch_call(
         func=gen_label_data_mfcc,
         params_list=[{"label": label, "label_data": label_data, "fs": fs} for label, label_data in data.items()],
         get_data=lambda result: result,

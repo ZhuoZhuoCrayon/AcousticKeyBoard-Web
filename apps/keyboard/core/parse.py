@@ -61,14 +61,14 @@ class DatasetParse:
                 constants.LabelType.TRAIN: self.dataset_unit.train_data,
                 constants.LabelType.TEST: self.dataset_unit.test_data,
             }
-            for _label, _label_data in _label_type_data_map[label_type]:
+            for _label, _label_data in _label_type_data_map[label_type].items():
                 for _vec in _label_data:
                     dataset_original_data_db_objs.append(
                         models.DatasetOriginalData(
                             dataset_id=dataset_id,
                             label=_label,
                             label_type=constants.LabelType.TRAIN,
-                            original_data=_vec.to_list(),
+                            original_data=_vec.tolist(),
                         )
                     )
 
@@ -88,14 +88,14 @@ class DatasetParse:
             }
             feature_data = format.batch_gen_mfcc_feature(data=_label_type_data_map[label_type], fs=self.dataset_unit.fs)
 
-            for _label, _label_data in feature_data:
+            for _label, _label_data in feature_data.items():
                 for _mfcc_feature in _label_data:
                     dataset_mfcc_feature_db_objs.append(
                         models.DatasetMfccFeature(
                             dataset_id=dataset_id,
                             label=_label,
                             label_type=constants.LabelType.TRAIN,
-                            mfcc_feature=_mfcc_feature.to_list(),
+                            mfcc_feature=_mfcc_feature.tolist(),
                         )
                     )
 

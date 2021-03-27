@@ -23,6 +23,9 @@ class CommonHandler:
                 "status": task_info_obj.status,
                 "state": task_info_obj.state,
             }
+            # Exception不能被序列化
+            if isinstance(celery_result["result"], Exception):
+                celery_result["result"] = str(celery_result["result"])
             celery_results.append(celery_result)
             logger.info(
                 _("task_id -> {task_id}, celery_result -> {celery_result}").format(

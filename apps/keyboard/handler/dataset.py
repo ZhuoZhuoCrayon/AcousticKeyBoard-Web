@@ -23,12 +23,13 @@ class DatasetHandler:
                 tmp_file.write(chunk)
         logger.info(f"moved dataset -> {dataset_file.name} to tmp path -> {tmp_path}")
 
+        # 暂时不存储原数据
         tasks_id = tasks.import_dataset.delay(
             dataset_save_path=tmp_path,
             verbose_name=verbose_name,
             description_more=description_more,
-            save_original_data=True,
+            save_original_data=False,
             tmp_dir=tmp_dir,
-        )
+        ).task_id
         logger.info(f"import dataset to db: task_id -> {tasks_id}")
         return tasks_id
