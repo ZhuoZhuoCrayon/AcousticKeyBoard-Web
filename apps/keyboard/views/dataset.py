@@ -26,9 +26,9 @@ class DatasetViews(view.DjangoCliModelViewSet):
     )
     @action(methods=["POST"], detail=False, serializer_class=serializers.ImportDatasetRequestSer)
     def import_dataset(self, request, *args, **kwargs):
-        handler.DatasetHandler.import_dataset(
+        task_id = handler.DatasetHandler.import_dataset(
             dataset_file=self.query_data["dataset"],
             verbose_name=self.query_data["verbose_name"],
             description_more=self.query_data["description_more"],
         )
-        return Response({"verbose_name": self.query_data["verbose_name"]})
+        return Response({"task_id": task_id})
