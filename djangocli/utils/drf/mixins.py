@@ -21,8 +21,13 @@ class ViewSetExceptionHandlerMixin:
 
     def initialize_request(self, request, *args, **kwargs):
         # 打印请求日志
-        # 默认content_type == multipart/form-data时传递文件，不打印相关body信息
-        body = json.dumps({"type": "file"}) if request.content_type in ["multipart/form-data"] else request.body
+        if request.content_type in ["multipart/form-data"]:
+            # 默认content_type == multipart/form-data时传递文件，不打印相关body信息
+            body = json.dumps({"type": "file"})
+        elif request.method in ["GET", "DELETE"]:
+            body = json.dumps(dict(request.GET))
+        else:
+            body = request.body or b"{}"
         request_info = {"headers": dict(request.headers), "body": json.loads(body)}
         logging.getLogger(LogModule.API).info(
             f"{settings.APP_NAME} receive request: "
@@ -99,10 +104,16 @@ class ViewSetResponseMixin:
             # 不可能有这种情况
             response_data = {"error": "not Response and  JsonResponse!"}
 
+        # 兼容时间对象传输
+        try:
+            response_data_str = json.dumps(response_data, indent=2, ensure_ascii=False)
+        except TypeError:
+            response_data_str = str(response_data)
+
         # 打印接口返回日志
         logging.getLogger(LogModule.API).info(
             f"{settings.APP_NAME} response: api -> {request.path}, actual_status_code -> {actual_status_code}, "
-            f"data -> \n{json.dumps(response_data, indent=2, ensure_ascii=False)}"
+            f"data -> \n{response_data_str}"
         )
         return super().finalize_response(request, response, *args, **kwargs)
 
