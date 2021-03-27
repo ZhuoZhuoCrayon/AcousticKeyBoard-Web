@@ -27,6 +27,9 @@ class Dataset(models.Model):
 class DatasetMfccFeature(models.Model):
     dataset_id = models.IntegerField(verbose_name=_("数据集ID"), db_index=True)
     label = models.CharField(verbose_name=_("数据标签"), db_index=True, max_length=32)
+    label_type = models.CharField(
+        verbose_name=_("标签类型"), db_index=True, max_length=16, choices=constants.LabelType.get_choices()
+    )
     mfcc_feature = models.JSONField(verbose_name=_("MFCC特征"), default=list)
 
     # 基础字段
@@ -42,6 +45,9 @@ class DatasetMfccFeature(models.Model):
 class DatasetOriginalData(models.Model):
     dataset_id = models.IntegerField(verbose_name=_("数据集ID"), db_index=True)
     label = models.CharField(verbose_name=_("数据标签"), db_index=True, max_length=32)
+    label_type = models.CharField(
+        verbose_name=_("标签类型"), db_index=True, max_length=16, choices=constants.LabelType.get_choices()
+    )
 
     original_data = models.JSONField(verbose_name=_("数据集原数据"), default=list)
 

@@ -38,6 +38,15 @@ class DataType:
         )
 
 
+class LabelType:
+    TEST = "test"
+    TRAIN = "train"
+
+    @staticmethod
+    def get_choices() -> Tuple:
+        return ((LabelType.TRAIN, _("训练数据")), (LabelType.TEST, _("测试数据")))
+
+
 class FileType:
     PICKLE = "pickle"
 
