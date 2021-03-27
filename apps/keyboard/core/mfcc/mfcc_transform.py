@@ -1,6 +1,6 @@
 import numpy as np
 
-from in_python.utils.mfcc import mfcc
+from apps.keyboard.core.mfcc import mfcc
 
 
 def mapminmax(x, ymin=-1, ymax=+1):

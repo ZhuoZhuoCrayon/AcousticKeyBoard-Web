@@ -3,7 +3,7 @@ import math
 import numpy as np
 from scipy.signal import lfilter
 
-from in_python.utils.mfcc import trifbank, vec2frames
+from apps.keyboard.core.mfcc import trifbank, vec2frames
 
 
 def nextpow2(n):
