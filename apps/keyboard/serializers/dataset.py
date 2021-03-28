@@ -37,12 +37,9 @@ class ImportDataseResponseSer(serializers.Serializer):
 
 class TrainRequestSer(serializers.Serializer):
     dataset_id = serializers.IntegerField(label=_("数据集id"))
-    per_train_num = serializers.IntegerField(label=_("每个标签的训练个数"), min_value=1, required=False)
-    per_train_rate = serializers.FloatField(label=_("每个标签的训练比例"), min_value=0.1, required=False)
+    per_train_rate = serializers.FloatField(label=_("每个标签的训练比例"), min_value=0.1, max_value=1.0)
 
     def validate(self, attrs):
-        if not ("per_train_num" in attrs or "per_train_rate" in attrs):
-            raise ValidationError(_("per_train_num（每个标签的训练个数）, per_train_rate（每个标签的训练比例）必须包含一个"))
         if not models.Dataset.objects.filter(id=attrs["dataset_id"]).exists():
             raise exceptions.DatasetNotFoundExc(context={"dataset_id": attrs["dataset_id"]})
         return attrs

@@ -35,5 +35,5 @@ class DatasetHandler:
         return tasks_id
 
     @classmethod
-    def train(cls, dataset_id: int, per_train_num: int, per_train_rate: float):
+    def train(cls, dataset_id: int, per_train_rate: float):
         pass

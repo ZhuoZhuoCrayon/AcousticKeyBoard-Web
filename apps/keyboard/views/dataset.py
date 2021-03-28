@@ -42,8 +42,6 @@ class DatasetViews(view.DjangoCliModelViewSet):
     @action(methods=["POST"], detail=False, serializer_class=serializers.TrainRequestSer)
     def train(self, request, *args, **kwargs):
         handler.DatasetHandler.train(
-            dataset_id=self.query_data["dataset_id"],
-            per_train_num=self.query_data.get("per_train_num", None),
-            per_train_rate=self.query_data.get("per_train_rate", None),
+            dataset_id=self.query_data["dataset_id"], per_train_rate=self.query_data["per_train_rate"]
         )
         return Response({})

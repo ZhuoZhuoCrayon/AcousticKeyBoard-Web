@@ -8,7 +8,7 @@ API_DATASET_IMPORT_DATASET = ApiMockData(
 )
 
 API_DATASET_TRAIN = ApiMockData(
-    request_data={"dataset_id": 1, "per_train_num": 10},
+    request_data={"dataset_id": 1, "per_train_rate": 0.8},
     response_data={"task_id": "377ef8e1-395b-4a94-9ee5-d084e4b20567"},
 )
 
