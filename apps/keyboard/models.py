@@ -59,3 +59,20 @@ class DatasetOriginalData(models.Model):
         verbose_name = _("数据集原数据")
         verbose_name_plural = _("数据集原数据")
         ordering = ["id"]
+
+
+class AlgorithmModelInst(models.Model):
+    dataset_id = models.IntegerField(verbose_name=_("数据集ID"), db_index=True)
+    algorithm = models.CharField(verbose_name=_("算法名称"), max_length=64, db_index=True)
+    save_path = models.CharField(verbose_name=_("模型存放路径"), max_length=256, db_index=True, default="")
+    train_info = models.JSONField(verbose_name=_("训练信息"), default=dict)
+    extra_info = models.JSONField(verbose_name=_("额外信息"), default=dict)
+
+    # 基础字段
+    created_at = models.DateTimeField(verbose_name=_("创建时间"), auto_now_add=True)
+    updated_at = models.DateTimeField(verbose_name=_("更新时间"), blank=True, null=True, auto_now=True)
+
+    class Meta:
+        verbose_name = _("算法模型实例（已训练）")
+        verbose_name_plural = _("算法模型实例（已训练）")
+        ordering = ["id"]

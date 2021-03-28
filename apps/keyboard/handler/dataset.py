@@ -33,3 +33,7 @@ class DatasetHandler:
         ).task_id
         logger.info(f"import dataset to db: task_id -> {tasks_id}")
         return tasks_id
+
+    @classmethod
+    def train(cls, dataset_id: int, per_train_num: int, per_train_rate: float):
+        pass

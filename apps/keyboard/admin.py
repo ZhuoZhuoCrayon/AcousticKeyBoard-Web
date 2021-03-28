@@ -22,3 +22,10 @@ class KeyBoardDatasetOriginalDataAdmin(admin.ModelAdmin):
     list_display = [field.name for field in models.DatasetOriginalData._meta.get_fields()]
     search_fields = ["dataset_id", "label"]
     list_filter = ["dataset_id", "label"]
+
+
+@admin.register(models.AlgorithmModelInst)
+class KeyBoardAlgorithmModelInstAdmin(admin.ModelAdmin):
+    list_display = [field.name for field in models.AlgorithmModelInst._meta.get_fields()]
+    search_fields = ["dataset_id", "algorithm", "save_path"]
+    list_filter = ["dataset_id", "algorithm", "save_path"]

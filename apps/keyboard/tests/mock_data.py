@@ -7,6 +7,11 @@ API_DATASET_IMPORT_DATASET = ApiMockData(
     response_data={"task_id": "377ef8e1-395b-4a94-9ee5-d084e4b20567"},
 )
 
+API_DATASET_TRAIN = ApiMockData(
+    request_data={"dataset_id": 1, "per_train_num": 10},
+    response_data={"task_id": "377ef8e1-395b-4a94-9ee5-d084e4b20567"},
+)
+
 
 API_COMMON_BATCH_CELERY_RESULTS_DELAY = ApiMockData(
     request_data={"task_ids": ["55022997-19cf-4314-88c1-f1dfff282649", "7258bbf7-853f-4a2b-adb6-222ae23cd4af"]},
