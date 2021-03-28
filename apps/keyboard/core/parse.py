@@ -6,32 +6,11 @@ from django.db import transaction
 
 from apps.keyboard import constants, models
 from apps.keyboard.core import format
+from apps.keyboard.utils import decorators
 from djangocli.constants import LogModule
 from in_python.core.pre.load import DataSetUnit
 
 logger = logging.getLogger(LogModule.APPS)
-
-
-def class_member_cache(name: str):
-    """
-    类成员缓存
-    :param name:
-    :return:
-    """
-    cache_field = f"_{name}"
-
-    def class_member_cache_inner(class_func):
-        def wrapper(self, *args, **kwargs):
-            cache_member = getattr(self, cache_field, None)
-            if cache_member:
-                return cache_member
-            cache_member = class_func(self, *args, **kwargs)
-            setattr(self, cache_field, cache_member)
-            return cache_member
-
-        return wrapper
-
-    return class_member_cache_inner
 
 
 class DatasetParse:
@@ -39,7 +18,7 @@ class DatasetParse:
         self.dataset_unit = dataset_unit
         self.more_info = more_info
 
-    @class_member_cache(name="dataset_db_obj")
+    @decorators.class_member_cache(name="dataset_db_obj")
     def get_dataset_db_obj(self) -> models.Dataset:
         return models.Dataset(
             dataset_name=self.dataset_unit.dataset_name,
@@ -52,7 +31,7 @@ class DatasetParse:
             description_more=self.more_info.get("description_more", self.dataset_unit.description),
         )
 
-    @class_member_cache(name="original_data_db_objs")
+    @decorators.class_member_cache(name="original_data_db_objs")
     def get_original_data_db_objs(self, dataset_id: int) -> List[models.DatasetOriginalData]:
         dataset_original_data_db_objs = []
 
@@ -77,7 +56,7 @@ class DatasetParse:
 
         return dataset_original_data_db_objs
 
-    @class_member_cache(name="mfcc_feature_db_objs")
+    @decorators.class_member_cache(name="mfcc_feature_db_objs")
     def get_mfcc_feature_db_objs(self, dataset_id) -> List[models.DatasetMfccFeature]:
         dataset_mfcc_feature_db_objs = []
 
