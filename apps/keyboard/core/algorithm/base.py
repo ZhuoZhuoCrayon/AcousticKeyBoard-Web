@@ -13,6 +13,7 @@ import six
 import tensorflow as tf
 from tensorflow.python.data.ops.dataset_ops import DatasetV1, DatasetV2
 
+from apps.keyboard import constants
 from djangocli.constants import LogModule
 
 logger = logging.getLogger(LogModule.APPS)
@@ -28,20 +29,20 @@ class BaseModel(metaclass=abc.ABCMeta):
 
     def __init__(
         self,
-        labels: List[str],
+        max_label_num: int,
         input_shape: Tuple[int],
         select_policy: Tuple[float, float] = (1.0, 1.0),
         *args,
         **kwargs,
     ):
-        self.labels = sorted(labels)
+        self.max_label_num = max_label_num
         self.input_shape = input_shape
         self.select_policy = select_policy
 
-        self.model = self.get_model(labels, input_shape, *args, **kwargs)
+        self.model = kwargs.get("model") or self.get_model(max_label_num, input_shape, *args, **kwargs)
 
     @abc.abstractmethod
-    def get_model(self, labels: List[str], input_shape: Tuple[int], *args, **kwargs) -> Any:
+    def get_model(self, max_label_num: int, input_shape: Tuple[int], *args, **kwargs) -> Any:
         raise NotImplementedError
 
     @abc.abstractmethod
@@ -64,7 +65,7 @@ class BaseModel(metaclass=abc.ABCMeta):
         self, original_data: Dict[str, List[np.ndarray]], per_action_rate: float
     ) -> Dict[str, List[np.ndarray]]:
         original_data = self.copy_data_layer(original_data)
-        for label in self.labels:
+        for label in sorted(list(original_data.keys())):
             if not original_data.get(label):
                 logger.warning(f"label -> {label} not in data.")
                 continue
@@ -89,9 +90,10 @@ class BaseModel(metaclass=abc.ABCMeta):
     def get_confusion_matrix(
         self, pred_labels: np.ndarray, expect_labels: np.ndarray, save_path: str = None, is_show: bool = False, **kwargs
     ) -> np.ndarray:
+        labels = list(set([constants.ID_LABEL_MAP[label_index] for label_index in expect_labels]))
         confusion_mtx = tf.math.confusion_matrix(expect_labels, pred_labels)
         plt.figure(figsize=(10, 8))
-        sns.heatmap(confusion_mtx, xticklabels=self.labels, yticklabels=self.labels, annot=True, fmt="g")
+        sns.heatmap(confusion_mtx, xticklabels=labels, yticklabels=labels, annot=True, fmt="g")
         plt.xlabel("Prediction")
         plt.ylabel("Label")
         if save_path:
@@ -101,21 +103,21 @@ class BaseModel(metaclass=abc.ABCMeta):
         confusion_mtx_np = confusion_mtx.numpy()
         if not kwargs.get("confusion_mtx_save_path"):
             return confusion_mtx_np
-        confusion_mtx_pd = pd.DataFrame(data=confusion_mtx_np, index=self.labels, columns=self.labels)
+        confusion_mtx_pd = pd.DataFrame(data=confusion_mtx_np, index=labels, columns=labels)
         confusion_mtx_pd.to_csv(kwargs["confusion_mtx_save_path"], encoding="utf-8", index=True)
 
 
 class TfBaseModel(six.with_metaclass(abc.ABCMeta, BaseModel)):
     MODEL_NAME = "tf-base-model"
 
-    def __init__(self, labels: List[str], input_shape: Tuple[int], *args, **kwargs):
-        super().__init__(labels, input_shape, *args, **kwargs)
+    def __init__(self, max_label_num: int, input_shape: Tuple[int], *args, **kwargs):
+        super().__init__(max_label_num, input_shape, *args, **kwargs)
         self.model: tf.keras.Sequential = self.model
 
         self.model.summary()
 
     @abc.abstractmethod
-    def get_model(self, labels: List[str], input_shape: Tuple[int], *args, **kwargs) -> tf.keras.Sequential:
+    def get_model(self, max_label_num: int, input_shape: Tuple[int], *args, **kwargs) -> tf.keras.Sequential:
         raise NotImplementedError
 
     def data_format(
@@ -125,12 +127,12 @@ class TfBaseModel(six.with_metaclass(abc.ABCMeta, BaseModel)):
         begin = 0
         label_features_list = []
         labels_format = np.zeros(self.get_data_sample_num(original_data))
-        for index, label in enumerate(self.labels):
+        for label in sorted(original_data.keys()):
             label_features = original_data.get(label, [])
-
             label_sample_num = len(label_features)
-            label_features_list.append(np.vstack(label_features).reshape(label_sample_num, *self.input_shape))
-            labels_format[begin : begin + label_sample_num] = index
+            if label_sample_num:
+                label_features_list.append(np.vstack(label_features).reshape(label_sample_num, *self.input_shape))
+                labels_format[begin : begin + label_sample_num] = constants.LABEL_ID_MAP[label]
 
             begin = begin + label_sample_num
 
@@ -152,13 +154,15 @@ class TfBaseModel(six.with_metaclass(abc.ABCMeta, BaseModel)):
             f"train num -> {labels_format.size}, total -> {self.get_data_sample_num(train_data)}, "
             f"per_train_rate -> {per_train_rate}",
         )
-        self.model.fit(train_dataset, epochs=100, batch_size=int(labels_format.size / len(self.labels)), verbose=0)
+        self.model.fit(
+            train_dataset, epochs=100, batch_size=int(labels_format.size / len(train_data.keys())), verbose=0
+        )
 
     def test(
         self, test_data: Dict[str, List[np.ndarray]], per_test_rate: float = None, *args, **kwargs
     ) -> Tuple[np.ndarray, np.ndarray, float]:
 
-        per_test_rate = per_test_rate or self.select_policy[ModelDataType.TRAIN]
+        per_test_rate = per_test_rate or self.select_policy[ModelDataType.TEST]
 
         _, test_data_format, except_labels = self.data_format(self.data_select(test_data, per_test_rate))
         pred_labels = np.argmax(self.model.predict(test_data_format), axis=1)

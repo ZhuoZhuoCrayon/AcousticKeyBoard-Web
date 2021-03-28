@@ -15,6 +15,12 @@ class DatasetViews(view.DjangoCliModelViewSet):
     model = models.Dataset
     serializer_class = serializers.DatasetModelSer
 
+    def perform_destroy(self, instance):
+        models.DatasetMfccFeature.objects.filter(dataset_id=instance.id).delete()
+        models.DatasetOriginalData.objects.filter(dataset_id=instance.id).delete()
+        models.AlgorithmModelInst.objects.filter(dataset_id=instance.id).delete()
+        super().perform_destroy(instance)
+
     def get_queryset(self):
         return self.model.objects.all()
 

@@ -24,16 +24,18 @@ class DatasetHandler:
         logger.info(f"moved dataset -> {dataset_file.name} to tmp path -> {tmp_path}")
 
         # 暂时不存储原数据
-        tasks_id = tasks.import_dataset.delay(
+        task_id = tasks.import_dataset.delay(
             dataset_save_path=tmp_path,
             verbose_name=verbose_name,
             description_more=description_more,
             save_original_data=False,
             tmp_dir=tmp_dir,
         ).task_id
-        logger.info(f"import dataset to db: task_id -> {tasks_id}")
-        return tasks_id
+        logger.info(f"import dataset to db: task_id -> {task_id}")
+        return task_id
 
     @classmethod
     def train(cls, dataset_id: int, per_train_rate: float):
-        pass
+        task_id = tasks.train_dataset.delay(dataset_id=dataset_id, per_train_rate=per_train_rate).task_id
+        logger.info(f"import dataset to db: task_id -> {task_id}")
+        return task_id

@@ -73,7 +73,7 @@ class DatasetParse:
                         models.DatasetMfccFeature(
                             dataset_id=dataset_id,
                             label=_label,
-                            label_type=constants.LabelType.TRAIN,
+                            label_type=label_type,
                             mfcc_feature=_mfcc_feature.tolist(),
                         )
                     )

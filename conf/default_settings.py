@@ -31,6 +31,8 @@ AK_ROOT = os.getenv("AK_ROOT", BASE_DIR)
 # 文件临时存储目录
 TMP_ROOT = os.getenv("TMP_ROOT", "c:/" if platform.system() == "Windows" else "/tmp")
 
+MODEL_INST_ROOT = os.path.join(BASE_DIR, "lib", "model_inst")
+
 DATA_UPLOAD_MAX_MEMORY_SIZE = 1024 * 1024 * 10
 
 # 最大并发数

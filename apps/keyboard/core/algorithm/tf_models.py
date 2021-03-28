@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import logging
-from typing import List, Tuple
+from typing import Tuple
 
 import tensorflow as tf
 
@@ -16,8 +16,8 @@ logging.getLogger("matplotlib.font_manager").disabled = True
 class BLstmModel(TfBaseModel):
     MODEL_NAME = "blstm"
 
-    def __init__(self, labels: List[str], input_shape: Tuple[int], *args, **kwargs):
-        super().__init__(labels, input_shape, *args, **kwargs)
+    def __init__(self, max_label_num: int, input_shape: Tuple[int], *args, **kwargs):
+        super().__init__(max_label_num, input_shape, *args, **kwargs)
 
         self.model.compile(
             optimizer=tf.keras.optimizers.Adam(),
@@ -25,7 +25,7 @@ class BLstmModel(TfBaseModel):
             metrics=["accuracy"],
         )
 
-    def get_model(self, labels: List[str], input_shape: Tuple[int], *args, **kwargs) -> tf.keras.Sequential:
+    def get_model(self, max_label_num: int, input_shape: Tuple[int], *args, **kwargs) -> tf.keras.Sequential:
         return tf.keras.models.Sequential(
             [
                 tf.keras.layers.Bidirectional(
@@ -37,7 +37,7 @@ class BLstmModel(TfBaseModel):
                 # ),
                 # tf.keras.layers.Dense(64, activation="relu"),
                 # tf.keras.layers.Dropout(0.8),
-                tf.keras.layers.Dense(units=len(labels), activation="softmax"),
+                tf.keras.layers.Dense(units=max_label_num, activation="softmax"),
             ]
         )
 
@@ -45,11 +45,11 @@ class BLstmModel(TfBaseModel):
 class LstmModel(BLstmModel):
     MODEL_NAME = "lstm"
 
-    def get_model(self, labels: List[str], input_shape: Tuple[int], *args, **kwargs) -> tf.keras.Sequential:
+    def get_model(self, max_label_num: int, input_shape: Tuple[int], *args, **kwargs) -> tf.keras.Sequential:
         return tf.keras.models.Sequential(
             [
                 tf.keras.layers.LSTM(units=100, return_sequences=False, input_shape=input_shape),
-                tf.keras.layers.Dense(units=len(labels), activation="softmax"),
+                tf.keras.layers.Dense(units=max_label_num, activation="softmax"),
             ]
         )
 
@@ -57,10 +57,10 @@ class LstmModel(BLstmModel):
 class RnnModel(BLstmModel):
     MODEL_NAME = "rnn"
 
-    def get_model(self, labels: List[str], input_shape: Tuple[int], *args, **kwargs) -> tf.keras.Sequential:
+    def get_model(self, max_label_num: int, input_shape: Tuple[int], *args, **kwargs) -> tf.keras.Sequential:
         return tf.keras.models.Sequential(
             [
                 tf.keras.layers.SimpleRNN(units=100, input_shape=input_shape),
-                tf.keras.layers.Dense(units=len(labels), activation="softmax"),
+                tf.keras.layers.Dense(units=max_label_num, activation="softmax"),
             ]
         )
