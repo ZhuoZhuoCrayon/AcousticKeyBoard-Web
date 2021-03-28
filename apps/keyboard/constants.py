@@ -44,7 +44,7 @@ class LabelType:
 
     @staticmethod
     def get_choices() -> Tuple:
-        return ((LabelType.TRAIN, _("训练数据")), (LabelType.TEST, _("测试数据")))
+        return (LabelType.TRAIN, _("训练数据")), (LabelType.TEST, _("测试数据"))
 
 
 class FileType:
@@ -60,3 +60,15 @@ DATA_ROOT = os.path.join(settings.AK_ROOT, "data")
 PREPROCESSED_DATA_ROOT = os.path.join(settings.AK_ROOT, "preprocessed_data")
 
 RESULT_ROOT = os.path.join(PREPROCESSED_DATA_ROOT, "result")
+
+
+ALL_CLASS_LABELS = [chr(alpha_ord) for alpha_ord in range(ord("A"), ord("Z"))] + [
+    "BACKSPACE",
+    "ENTER",
+    "L_SHIFT",
+    "R_CTRL",
+]
+
+LABEL_ID_MAP = {label: index for index, label in enumerate(ALL_CLASS_LABELS)}
+
+ID_LABEL_MAP = {index: label for label, index in LABEL_ID_MAP.items()}

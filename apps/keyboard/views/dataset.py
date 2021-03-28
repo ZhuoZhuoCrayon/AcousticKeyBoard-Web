@@ -15,6 +15,12 @@ class DatasetViews(view.DjangoCliModelViewSet):
     model = models.Dataset
     serializer_class = serializers.DatasetModelSer
 
+    def perform_destroy(self, instance):
+        models.DatasetMfccFeature.objects.filter(dataset_id=instance.id).delete()
+        models.DatasetOriginalData.objects.filter(dataset_id=instance.id).delete()
+        models.AlgorithmModelInst.objects.filter(dataset_id=instance.id).delete()
+        super().perform_destroy(instance)
+
     def get_queryset(self):
         return self.model.objects.all()
 
@@ -32,3 +38,16 @@ class DatasetViews(view.DjangoCliModelViewSet):
             description_more=self.query_data["description_more"],
         )
         return Response({"task_id": task_id})
+
+    @swagger_auto_schema(
+        operation_summary=_("训练数据集"),
+        tags=["dataset"],
+        request_body=serializers.TrainRequestSer(),
+        responses={status.HTTP_200_OK: serializers.TrainResponseSer()},
+    )
+    @action(methods=["POST"], detail=False, serializer_class=serializers.TrainRequestSer)
+    def train(self, request, *args, **kwargs):
+        handler.DatasetHandler.train(
+            dataset_id=self.query_data["dataset_id"], per_train_rate=self.query_data["per_train_rate"]
+        )
+        return Response({})

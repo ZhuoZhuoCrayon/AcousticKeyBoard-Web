@@ -3,7 +3,7 @@ from django.utils.translation import ugettext_lazy as _
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
-from apps.keyboard import constants, models
+from apps.keyboard import constants, exceptions, models
 from apps.keyboard.tests import mock_data
 
 
@@ -33,3 +33,21 @@ class ImportDatasetRequestSer(serializers.Serializer):
 class ImportDataseResponseSer(serializers.Serializer):
     class Meta:
         swagger_schema_fields = {"example": mock_data.API_DATASET_IMPORT_DATASET.response_data}
+
+
+class TrainRequestSer(serializers.Serializer):
+    dataset_id = serializers.IntegerField(label=_("数据集id"))
+    per_train_rate = serializers.FloatField(label=_("每个标签的训练比例"), min_value=0.1, max_value=1.0)
+
+    def validate(self, attrs):
+        if not models.Dataset.objects.filter(id=attrs["dataset_id"]).exists():
+            raise exceptions.DatasetNotFoundExc(context={"dataset_id": attrs["dataset_id"]})
+        return attrs
+
+    class Meta:
+        swagger_schema_fields = {"example": mock_data.API_DATASET_TRAIN.request_data}
+
+
+class TrainResponseSer(serializers.Serializer):
+    class Meta:
+        swagger_schema_fields = {"example": mock_data.API_DATASET_TRAIN.response_data}

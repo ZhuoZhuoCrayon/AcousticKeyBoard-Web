@@ -5,7 +5,7 @@ from pathlib import Path
 
 import dotenv
 
-from scripts.check_and_create_log_file import check_and_create_log_file
+from scripts import check_and_create_log_file, dir_checker
 
 
 class EnvType:
@@ -39,4 +39,5 @@ BASE_DIR = Path(__file__).resolve().parent
 
 
 # check and create log file
-check_and_create_log_file(log_file_paths=list(_module.LOGGING_FILE.values()))
+check_and_create_log_file.check_and_create_log_file(log_file_paths=list(_module.LOGGING_FILE.values()))
+dir_checker.dir_checker(dir_roots=[_module.MODEL_INST_ROOT])
