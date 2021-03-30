@@ -55,6 +55,20 @@ class FileType:
         return [FileType.PICKLE]
 
 
+class AlgorithmModel:
+    RNN = "rnn"
+    BLSTM = "blstm"
+    LSTM = "lstm"
+
+    @staticmethod
+    def get_choices() -> Tuple:
+        return (
+            (AlgorithmModel.RNN, _("RNN")),
+            (AlgorithmModel.BLSTM, _("BiLSTM")),
+            (AlgorithmModel.LSTM, _("LSTM")),
+        )
+
+
 DATA_ROOT = os.path.join(settings.AK_ROOT, "data")
 
 PREPROCESSED_DATA_ROOT = os.path.join(settings.AK_ROOT, "preprocessed_data")

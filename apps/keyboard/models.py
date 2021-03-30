@@ -119,7 +119,7 @@ class AlgorithmModelInst(models.Model):
 
     def load_model(self) -> base.TfBaseModel:
         if not self.is_ready:
-            raise exceptions.ModelInstNotReady(context={"inst_id": self.id})
+            raise exceptions.ModelInstNotReadyExc(context={"inst_id": self.id})
         name_tf_model_class_map = {
             tf_models.BLstmModel.MODEL_NAME: tf_models.BLstmModel,
             tf_models.RnnModel.MODEL_NAME: tf_models.RnnModel,

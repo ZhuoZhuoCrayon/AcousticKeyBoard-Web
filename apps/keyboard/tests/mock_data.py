@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
+import math
+import random
 
+from apps.keyboard import constants
 from djangocli.utils.unittest.base import ApiMockData
 
 API_DATASET_IMPORT_DATASET = ApiMockData(
@@ -31,4 +34,14 @@ API_COMMON_BATCH_CELERY_RESULTS_DELAY = ApiMockData(
             "state": "SUCCESS",
         },
     ],
+)
+
+
+API_MODEL_INST_PREDICT = ApiMockData(
+    request_data={
+        "dataset_id": 1,
+        "algorithm": constants.AlgorithmModel.BLSTM,
+        "signal": [random.randint(-int(math.pow(2, 15)), int(math.pow(2, 15))) for i in range(2002)],
+    },
+    response_data={"predict": "A"},
 )
