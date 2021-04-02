@@ -32,3 +32,14 @@ class ModelInstViews(view.DjangoCliModelViewSet):
         return Response(
             handler.ModelInstHandler.predict(inst_id=self.query_data["inst_id"], signal=self.query_data["signal"])
         )
+
+    @swagger_auto_schema(
+        operation_summary=_("安卓Debug接口"),
+        tags=["model_inst"],
+        request_body=serializers.PredictRequestSer(),
+        responses={status.HTTP_200_OK: serializers.PredictResponseSer()},
+    )
+    @action(methods=["POST"], detail=False, serializer_class=serializers.PredictRequestSer)
+    def debug(self, request, *args, **kwargs):
+        handler.ModelInstHandler.debug(inst_id=self.query_data["inst_id"], signal=self.query_data["signal"])
+        return Response({})
