@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 import math
+import threading
 import uuid
 
 from django.conf import settings
 from django_redis import get_redis_connection
+from redis import StrictRedis
 
 from djangocli.constants import TimeUnit
 
@@ -28,8 +30,26 @@ def django_cache_key_maker(key: str, key_prefix: str, version: int):
     return f"{REDIS_KEY_PREFIX.WEB_CACHE}:{key_prefix or 'default'}:{key}"
 
 
+class RedisInstSingleTon:
+    _inst_lock = threading.Lock()
+    _inst_name = "redis_inst"
+
+    @classmethod
+    def get_inst(cls) -> StrictRedis:
+        if hasattr(RedisInstSingleTon, RedisInstSingleTon._inst_name):
+            return getattr(RedisInstSingleTon, RedisInstSingleTon._inst_name)
+        with RedisInstSingleTon._inst_lock:
+            setattr(RedisInstSingleTon, RedisInstSingleTon._inst_name, get_redis_connection())
+        return getattr(RedisInstSingleTon, RedisInstSingleTon._inst_name)
+
+
+# shortcut
+def get_redis_conn():
+    return RedisInstSingleTon.get_inst()
+
+
 class RedisLock:
-    redis_inst = get_redis_connection()
+    redis_inst = RedisInstSingleTon.get_inst()
 
     def __init__(self, lock_name: str = None, lock_expire: int = DEFAULT_TIMEOUT):
         self.lock_name = lock_name
