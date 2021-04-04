@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import math
 import random
+import uuid
 
 from apps.keyboard import constants
 from djangocli.utils.unittest.base import ApiMockData
@@ -44,4 +45,14 @@ API_MODEL_INST_PREDICT = ApiMockData(
         "signal": [random.randint(-int(math.pow(2, 15)), int(math.pow(2, 15))) for i in range(2002)],
     },
     response_data={"predict": "A"},
+)
+
+
+API_MODEL_INST_CORRECT = ApiMockData(
+    request_data={
+        "dataset_id": 1,
+        "expect_label": "A",
+        "cache_key": str(uuid.uuid4()),
+    },
+    response_data={"dataset_mfcc_feature_obj": 1},
 )

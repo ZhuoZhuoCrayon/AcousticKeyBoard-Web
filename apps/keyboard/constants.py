@@ -76,7 +76,7 @@ PREPROCESSED_DATA_ROOT = os.path.join(settings.AK_ROOT, "preprocessed_data")
 RESULT_ROOT = os.path.join(PREPROCESSED_DATA_ROOT, "result")
 
 
-ALL_CLASS_LABELS = [chr(alpha_ord) for alpha_ord in range(ord("A"), ord("Z"))] + [
+ALL_CLASS_LABELS = [chr(alpha_ord) for alpha_ord in range(ord("A"), ord("Z") + 1)] + [
     "BACKSPACE",
     "ENTER",
     "L_SHIFT",
@@ -88,3 +88,5 @@ LABEL_ID_MAP = {label: index for index, label in enumerate(ALL_CLASS_LABELS)}
 ID_LABEL_MAP = {index: label for label, index in LABEL_ID_MAP.items()}
 
 TRANSFER_INT = 32767
+
+CORRECT_MODEL_THRESHOLD = 20

@@ -53,3 +53,17 @@ class DebugRequestSer(PredictRequestSer):
 
 class DebugResponseSer(PredictResponseSer):
     pass
+
+
+class CorrectRequestSer(serializers.Serializer):
+    dataset_id = serializers.IntegerField(label=_("数据集id"))
+    expect_label = serializers.CharField(label=_("标签"))
+    cache_key = serializers.CharField(label=_("缓存MFCC特征的key值"))
+
+    class Meta:
+        swagger_schema_fields = {"example": mock_data.API_MODEL_INST_CORRECT.request_data}
+
+
+class CorrectResponseSer(serializers.Serializer):
+    class Meta:
+        swagger_schema_fields = {"example": mock_data.API_MODEL_INST_CORRECT.response_data}
