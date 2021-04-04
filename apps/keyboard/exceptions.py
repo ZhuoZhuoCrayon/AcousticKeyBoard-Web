@@ -15,7 +15,19 @@ class DatasetNotFoundExc(KeyBoardAppBaseException):
     MESSAGE = _("数据集不存在")
 
 
-class ModelInstNotReady(KeyBoardAppBaseException):
+class ModelInstNotReadyExc(KeyBoardAppBaseException):
     FUNCTION_ERROR_CODE = "01"
     MESSAGE_TEMPLATE = _("算法模型实例：inst_id -> {inst_id} 不可用")
     MESSAGE = _("算法模型实例不可用")
+
+
+class ModelInstNotFoundExc(KeyBoardAppBaseException):
+    FUNCTION_ERROR_CODE = "02"
+    MESSAGE_TEMPLATE = _("算法模型实例：inst_id -> {inst_id} 不存在")
+    MESSAGE = _("算法模型实例不存在")
+
+
+class ModelInstFeatureCacheNotFoundExc(KeyBoardAppBaseException):
+    FUNCTION_ERROR_CODE = "03"
+    MESSAGE_TEMPLATE = _("识别特征缓存过期：dataset_id -> {dataset_id}, cache_key -> {cache_key}")
+    MESSAGE = _("识别特征缓存过期")

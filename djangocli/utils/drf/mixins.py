@@ -21,7 +21,10 @@ class ViewSetExceptionHandlerMixin:
 
     def initialize_request(self, request, *args, **kwargs):
         # 打印请求日志
-        if request.content_type in ["multipart/form-data"]:
+
+        if request.path in settings.REQUEST_API_DATA_LOG_EXEMPT:
+            body = json.dumps({"type": "exempted"})
+        elif request.content_type in ["multipart/form-data"]:
             # 默认content_type == multipart/form-data时传递文件，不打印相关body信息
             body = json.dumps({"type": "file"})
         elif request.method in ["GET", "DELETE"]:

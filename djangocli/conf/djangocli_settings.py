@@ -149,3 +149,6 @@ LOGGING = {
         LogModule.API: {"handlers": ["api_log_file"], "level": "INFO"},
     },
 }
+
+
+REQUEST_API_DATA_LOG_EXEMPT = []

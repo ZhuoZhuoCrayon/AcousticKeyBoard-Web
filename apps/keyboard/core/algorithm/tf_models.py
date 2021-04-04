@@ -4,6 +4,7 @@ from typing import Tuple
 
 import tensorflow as tf
 
+from apps.keyboard import constants
 from apps.keyboard.core.algorithm.base import TfBaseModel
 
 # https://stackoverflow.com/questions/55318626/module-tensorflow-has-no-attribute-logging
@@ -14,7 +15,7 @@ logging.getLogger("matplotlib.font_manager").disabled = True
 
 
 class BLstmModel(TfBaseModel):
-    MODEL_NAME = "blstm"
+    MODEL_NAME = constants.AlgorithmModel.BLSTM
 
     def __init__(self, max_label_num: int, input_shape: Tuple[int], *args, **kwargs):
         super().__init__(max_label_num, input_shape, *args, **kwargs)
@@ -43,7 +44,7 @@ class BLstmModel(TfBaseModel):
 
 
 class LstmModel(BLstmModel):
-    MODEL_NAME = "lstm"
+    MODEL_NAME = constants.AlgorithmModel.LSTM
 
     def get_model(self, max_label_num: int, input_shape: Tuple[int], *args, **kwargs) -> tf.keras.Sequential:
         return tf.keras.models.Sequential(
@@ -55,7 +56,7 @@ class LstmModel(BLstmModel):
 
 
 class RnnModel(BLstmModel):
-    MODEL_NAME = "rnn"
+    MODEL_NAME = constants.AlgorithmModel.RNN
 
     def get_model(self, max_label_num: int, input_shape: Tuple[int], *args, **kwargs) -> tf.keras.Sequential:
         return tf.keras.models.Sequential(

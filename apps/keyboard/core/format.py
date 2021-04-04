@@ -7,6 +7,10 @@ from apps.keyboard.core.mfcc.mfcc_transform import mfcc_transform
 from apps.keyboard.utils import concurrent
 
 
+def get_mfcc(vec: np.ndarray, fs: int) -> np.ndarray:
+    return mfcc_transform(vec, fs, 20, 6, 0.96, 28, 14, 1000, 10)
+
+
 def gen_label_data_mfcc(label: str, label_data: np.ndarray, fs: int):
     return label, [mfcc_transform(vec, fs, 20, 6, 0.96, 28, 14, 1000, 10) for vec in label_data]
 
