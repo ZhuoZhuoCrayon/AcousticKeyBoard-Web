@@ -45,3 +45,11 @@ class PredictRequestSer(serializers.Serializer):
 class PredictResponseSer(serializers.Serializer):
     class Meta:
         swagger_schema_fields = {"example": mock_data.API_MODEL_INST_PREDICT.response_data}
+
+
+class DebugRequestSer(PredictRequestSer):
+    label = serializers.CharField(label=_("标签"))
+
+
+class DebugResponseSer(PredictResponseSer):
+    pass

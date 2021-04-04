@@ -36,10 +36,12 @@ class ModelInstViews(view.DjangoCliModelViewSet):
     @swagger_auto_schema(
         operation_summary=_("安卓Debug接口"),
         tags=["model_inst"],
-        request_body=serializers.PredictRequestSer(),
-        responses={status.HTTP_200_OK: serializers.PredictResponseSer()},
+        request_body=serializers.DebugRequestSer(),
+        responses={status.HTTP_200_OK: serializers.DebugResponseSer()},
     )
-    @action(methods=["POST"], detail=False, serializer_class=serializers.PredictRequestSer)
+    @action(methods=["POST"], detail=False, serializer_class=serializers.DebugRequestSer)
     def debug(self, request, *args, **kwargs):
-        handler.ModelInstHandler.debug(inst_id=self.query_data["inst_id"], signal=self.query_data["signal"])
+        handler.ModelInstHandler.debug(
+            inst_id=self.query_data["inst_id"], signal=self.query_data["signal"], label=self.query_data["label"]
+        )
         return Response({})

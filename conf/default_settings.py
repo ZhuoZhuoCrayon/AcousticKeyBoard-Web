@@ -41,4 +41,4 @@ DATA_UPLOAD_MAX_MEMORY_SIZE = 1024 * 1024 * 10
 CONCURRENT_NUMBER = 15
 
 
-REQUEST_API_DATA_LOG_EXEMPT = ["/api/v1/keyboard/model_inst/predict/"]
+REQUEST_API_DATA_LOG_EXEMPT = ["/api/v1/keyboard/model_inst/predict/", "/api/v1/keyboard/model_inst/debug/"]
