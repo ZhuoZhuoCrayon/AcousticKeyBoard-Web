@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import itertools
-import json
 import logging
 import shutil
 from collections import defaultdict
@@ -105,10 +104,10 @@ def train_dataset(dataset_id: int, per_train_rate: float, **kwargs):
 
 def correct_model_lock(correct_model_func):
     def wrapper(dataset_id: int, **kwargs):
-        lock_name = f"{redis.REDIS_KEY_PREFIX.LOCK}:dataset:{dataset_id}:correct"
+        lock_name = f":dataset:{dataset_id}:correct"
         with redis.RedisLock(lock_name=lock_name, lock_expire=30 * TimeUnit.MINUTE) as identifier:
             if identifier is None:
-                # 如果被低耗时任务占用，结束，等待下一次触发
+                # 如果被低耗时任务占用或者有其他模型矫正任务触发，结束，等待下一次触发
                 logger.info(f"celery task: task -> correct_model, dataset_id -> {dataset_id}, 被低耗时任务占用，结束，等待下一次触发")
                 return
             return correct_model_func(dataset_id, **kwargs)
@@ -127,7 +126,7 @@ def correct_model(dataset_id: int):
     correct_info = dict(redis_conn.hgetall(f"{redis.REDIS_KEY_PREFIX.WEB_CACHE}:dataset:{dataset_id}:correct"))
     correct_info = {k: int(v) for k, v in correct_info.items()}
 
-    logger.info(f"correct_info -> {json.dumps(correct_info, indent=2)}")
+    logger.info(f"correct_info -> {correct_info}")
 
     if not (correct_info and sum(correct_info.values()) > constants.CORRECT_MODEL_THRESHOLD):
         logger.info(

@@ -68,7 +68,7 @@ class ModelInstHandler:
         )
         dataset_mfcc_feature_obj.save()
 
-        lock_name = f"{redis.REDIS_KEY_PREFIX.LOCK}:dataset:{dataset_id}:correct"
+        lock_name = f":dataset:{dataset_id}:correct"
 
         with redis.RedisLock(lock_name=lock_name, lock_expire=5 * TimeUnit.SECOND) as identifier:
             correct_hash_key = f"{redis.REDIS_KEY_PREFIX.WEB_CACHE}:dataset:{dataset_id}:correct"
