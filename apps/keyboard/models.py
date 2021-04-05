@@ -6,7 +6,7 @@ from django.conf import settings
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
-from apps.keyboard import constants, exceptions
+from apps.keyboard import constants, exceptions, memory_cache
 from apps.keyboard.core.algorithm import base, tf_models
 from djangocli.constants import LogModule
 
@@ -103,7 +103,7 @@ class AlgorithmModelInst(models.Model):
 
         tf_model.model.save(filepath=save_path, overwrite=True)
 
-        self.save_path = save_path
+        self.save_path = str(save_path)
         self.extra_info.update(
             {
                 **kwargs.get("extra_info", {}),
@@ -116,6 +116,9 @@ class AlgorithmModelInst(models.Model):
         # 变更模型为可用状态
         self.is_ready = True
         self.save()
+
+        # 缓存最新模型
+        memory_cache.TF_MODEL_CACHE[self.save_path] = tf_model
 
     def load_model(self) -> base.TfBaseModel:
         if not self.is_ready:

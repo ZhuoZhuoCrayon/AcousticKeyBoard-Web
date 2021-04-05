@@ -45,3 +45,19 @@ class ModelInstViews(view.DjangoCliModelViewSet):
             inst_id=self.query_data["inst_id"], signal=self.query_data["signal"], label=self.query_data["label"]
         )
         return Response({})
+
+    @swagger_auto_schema(
+        operation_summary=_("模型矫正"),
+        tags=["model_inst"],
+        request_body=serializers.CorrectRequestSer(),
+        responses={status.HTTP_200_OK: serializers.CorrectResponseSer()},
+    )
+    @action(methods=["POST"], detail=False, serializer_class=serializers.CorrectRequestSer)
+    def correct(self, request, *args, **kwargs):
+        return Response(
+            handler.ModelInstHandler.correct(
+                dataset_id=self.query_data["dataset_id"],
+                cache_key=self.query_data["cache_key"],
+                expect_label=self.query_data["expect_label"],
+            )
+        )
