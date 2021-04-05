@@ -75,7 +75,7 @@ def train_dataset(dataset_id: int, per_train_rate: float, **kwargs):
     logger.info(f"celery task: task -> train_dataset, dataset_id -> {dataset_id} begin")
 
     train_info, train_data = get_model_data(dataset_id, constants.LabelType.TRAIN, per_train_rate)
-    _, test_data = get_model_data(dataset_id, constants.LabelType.TEST, per_action_rate=0.4)
+    _, test_data = get_model_data(dataset_id, constants.LabelType.TEST, per_action_rate=per_train_rate)
 
     labels = list(train_info.keys())
     shape = train_data[labels[0]][0].shape
