@@ -85,14 +85,14 @@ class ModelInstHandler:
                 }
                 # 先把这部分数据通过pipeline原子操作减除
                 redis_pipeline = cls.redis_conn.pipeline()
-                for label, err_num in correct_info_tmp:
+                for label, err_num in correct_info_tmp.items():
                     redis_pipeline.hincrby(correct_hash_tmp_key, label, -err_num)
 
                 # 错误个数 +1
                 redis_pipeline.hincrby(correct_hash_key, expect_label)
 
                 # 如果抢到锁，把备份数据怼到实时数据中
-                for label, err_num in correct_info_tmp:
+                for label, err_num in correct_info_tmp.items():
                     redis_pipeline.hincrby(correct_hash_key, label, err_num)
 
                 response = redis_pipeline.execute()
