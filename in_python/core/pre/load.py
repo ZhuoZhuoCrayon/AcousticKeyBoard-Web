@@ -19,15 +19,7 @@ class DataSetUnitBase:
 
     SEP = "#"
 
-    def __init__(
-        self,
-        dataset_name: str,
-        project_type: str,
-        data_type: str,
-        description: str,
-        length: int,
-        fs: int,
-    ):
+    def __init__(self, dataset_name: str, project_type: str, data_type: str, description: str, length: int, fs: int):
         self.dataset_name = dataset_name
         self.project_type = project_type
         self.data_type = data_type
