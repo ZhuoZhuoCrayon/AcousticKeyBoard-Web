@@ -62,6 +62,8 @@ class LstmModel(BLstmModel):
         )
 ```
 
+*代码：[apps/keyboard/core/algorithm](https://github.com/ZhuoZhuoCrayon/AcousticKeyBoard-Web/tree/master/apps/keyboard/core/algorithm)*
+
 
 ## 📦 Usage
 
