@@ -7,7 +7,7 @@
 </p>
 
 <p align="center">
-    <img src="docs/demo.gif" alt="demo1" width="100%">
+    <img src="docs/demo.gif" alt="demo1" width="80%" />
 </p>
 
 
@@ -26,7 +26,7 @@
 
 2）📈 预测结果
 
-<img src="docs/idea.png" alt="idea" style="zoom:30%;">
+<img src="docs/idea.png" alt="idea" width="50%" />
 
 *A-V，LSTM。*
 
