@@ -10,6 +10,7 @@
     <img src="docs/demo.gif" alt="demo" width="100%" />
 </p>
 
+👉 [B 站 Demo 演示](https://www.bilibili.com/video/BV1tj411z7RD/?share_source=copy_web&vd_source=48237e165965c122bc57ba2bf814c3d0)。
 
 ## 💡Ideas
 
